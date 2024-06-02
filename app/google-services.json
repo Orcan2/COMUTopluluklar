@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "116819786144",
+    "project_id": "comutopluluklar-27e29",
+    "storage_bucket": "comutopluluklar-27e29.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:116819786144:android:0b4e90fd7ae29b40878cc5",
+        "android_client_info": {
+          "package_name": "com.example.comutopluluklar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBI5nVu5H4Q8AMHUYFciZnUga_tEQG89dM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
