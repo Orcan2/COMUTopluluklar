@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">COMUtopluluklar</string>
+    <string name="title_activity_sign_screen">SignScreen</string>
+    <string name="title_activity_giris_ekrani">GirisEkrani</string>
 </resources>
