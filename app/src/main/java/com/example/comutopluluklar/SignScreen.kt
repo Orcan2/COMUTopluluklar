@@ -66,6 +66,9 @@ class SignScreen : ComponentActivity() {
         if(email.isEmpty()||password.isEmpty()) {
             Toast.makeText(this, "E-posta veya şifre boş olamaz!", Toast.LENGTH_LONG).show()
         }
+        else if (password.length<6) {
+            Toast.makeText(this, "Şifre en az 6 karakter olmalıdır!", Toast.LENGTH_LONG).show()
+        }
         else {
             auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
                 // Başarılıysa, MainActivity'e yönlendir
