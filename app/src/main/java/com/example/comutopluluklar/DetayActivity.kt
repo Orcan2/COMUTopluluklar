@@ -1,6 +1,7 @@
 package com.example.comutopluluklar
 
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -83,19 +84,24 @@ class DetayActivity : AppCompatActivity() {
 
         // Buton tıklaması ile yeni gönderi ekleme
         binding.buttonGonderiEkle.setOnClickListener {
+            if (TextUtils.isEmpty(binding.yenigonderiText.text.toString())) {
+                binding.yenigonderiText.error = "Buraya metin giriniz"
+            }
+            else {
+                // Yeni metin verisi
+                val yeniGonderi = binding.yenigonderiText.text.toString()
 
-            // Yeni metin verisi
-            val yeniGonderi = binding.yenigonderiText.text.toString()
-
-            // Yeni metni eklemek için düğüm referansı
-            val yeniMetinRef = topluluklarDugumuRef.push() // push() metodu yeni bir benzersiz alt düğüm oluşturur
-            yeniMetinRef.setValue(yeniGonderi)
-                .addOnSuccessListener {
-                    println("Metin başarıyla eklendi.")
-                }
-                .addOnFailureListener {
-                    println("Metin eklenirken bir hata oluştu: ${it.message}")
-                }
+                // Yeni metni eklemek için düğüm referansı
+                val yeniMetinRef =
+                    topluluklarDugumuRef.push() // push() metodu yeni bir benzersiz alt düğüm oluşturur
+                yeniMetinRef.setValue(yeniGonderi)
+                    .addOnSuccessListener {
+                        println("Metin başarıyla eklendi.")
+                    }
+                    .addOnFailureListener {
+                        println("Metin eklenirken bir hata oluştu: ${it.message}")
+                    }
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             if(TextUtils.isEmpty(etToplulukaciklama)){
                 binding.etToplulukAciklama.error = "Topluluk açıklaması giriniz"
             }
-            else{
+            else if(!TextUtils.isEmpty(etToplulukaciklama)&&!TextUtils.isEmpty(etToplulukismi)){
                 var database=FirebaseDatabase.getInstance()
                 var databaseReference=database.reference.child("Topluluklar")
                 var id=databaseReference.child(topID)
