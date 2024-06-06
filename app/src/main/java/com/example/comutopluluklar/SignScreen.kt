@@ -5,21 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.comutopluluklar.databinding.ActivitySignBinding
-import com.example.comutopluluklar.ui.theme.COMUTopluluklarTheme
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class SignScreen : ComponentActivity() {
     private lateinit var binding: ActivitySignBinding
@@ -30,56 +18,79 @@ class SignScreen : ComponentActivity() {
         binding = ActivitySignBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        auth = Firebase.auth
+        auth = FirebaseAuth.getInstance()
 
         val currentUser = auth.currentUser
-        if(currentUser != null){
-            val intent = Intent(this,MainActivity::class.java)
+        if (currentUser != null) {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
     }
 
-
-    fun girisYapclick(view: View){
+    fun girisYapclick(view: View) {
         val email = binding.emailText.text.toString()
         val password = binding.passwordText.text.toString()
-        if(email.isEmpty()||password.isEmpty()){
+//        val isAdmin = binding.adminCheckBox.isChecked
+//        val isNormalUser = binding.normalUserCheckBox.isChecked
+
+        if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "E-posta veya şifre boş olamaz!", Toast.LENGTH_LONG).show()
         }
-        else{
-            auth.signInWithEmailAndPassword(email,password).addOnSuccessListener {
-                val intent = Intent(this@SignScreen, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }.addOnFailureListener {exception ->
-                Toast.makeText(this@SignScreen, exception.localizedMessage  , Toast.LENGTH_LONG).show()
-            }
-        }
 
-    }
-
-    fun kayitOlclick(view: View) {
-        val email = binding.emailText.text.toString()
-        val password = binding.emailText.text.toString()
-
-        if(email.isEmpty()||password.isEmpty()) {
-            Toast.makeText(this, "E-posta veya şifre boş olamaz!", Toast.LENGTH_LONG).show()
-        }
-        else if (password.length<6) {
-            Toast.makeText(this, "Şifre en az 6 karakter olmalıdır!", Toast.LENGTH_LONG).show()
-        }
-        else {
-            auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
-                // Başarılıysa, MainActivity'e yönlendir
-                val intent = Intent(this@SignScreen, MainActivity::class.java)
+         else {
+            auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
+                val intent = Intent(this@SignScreen, ToplulukListActivity::class.java)
                 startActivity(intent)
                 finish()
             }.addOnFailureListener { exception ->
-                // Başarısızlık durumunda hata mesajını göster
                 Toast.makeText(this@SignScreen, exception.localizedMessage, Toast.LENGTH_LONG).show()
             }
         }
     }
 
+    fun kayitOlclick(view: View) {
+        val email = binding.emailText.text.toString()
+        val password = binding.passwordText.text.toString()
+        val isAdmin = binding.adminCheckBox.isChecked
+        val isNormalUser = binding.normalUserCheckBox.isChecked
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "E-posta veya şifre boş olamaz!", Toast.LENGTH_LONG).show()
+        } else if (password.length < 6) {
+            Toast.makeText(this, "Şifre en az 6 karakter olmalıdır!", Toast.LENGTH_LONG).show()
+        } else if (isAdmin && isNormalUser) {
+            Toast.makeText(this, "Lütfen sadece bir seçenek işaretleyin!", Toast.LENGTH_LONG).show()
+        } else if (!isAdmin && !isNormalUser) {
+            Toast.makeText(this, "Lütfen bir kullanıcı türü seçin!", Toast.LENGTH_LONG).show()
+        } else {
+            auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener { authResult ->
+                val user = authResult.user
+                if (user != null) {
+                    // Kullanıcı bilgilerini içeren bir harita oluştur
+                    val userMap = hashMapOf(
+                        "email" to email,
+                        "uid" to user.uid,
+                        "isAdmin" to isAdmin
+                    )
+
+                    // Uygun koleksiyona kullanıcı bilgilerini kaydet
+                    val collectionName = if (isAdmin) "admins" else "users"
+                    FirebaseFirestore.getInstance().collection(collectionName).document(user.uid)
+                        .set(userMap)
+                        .addOnSuccessListener {
+                            val intent = Intent(this@SignScreen, ToplulukListActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                        .addOnFailureListener { exception ->
+                            Toast.makeText(this@SignScreen, "Kullanıcı bilgileri kaydedilemedi: ${exception.localizedMessage}", Toast.LENGTH_LONG).show()
+                        }
+                }
+            }.addOnFailureListener { exception ->
+                Toast.makeText(this@SignScreen, exception.localizedMessage, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 }
+

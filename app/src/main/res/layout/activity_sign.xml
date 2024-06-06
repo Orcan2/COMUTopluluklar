@@ -22,17 +22,39 @@
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+    <CheckBox
+        android:id="@+id/adminCheckBox"
+        android:layout_width="79dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="108dp"
+        android:text="Admin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordText" />
+
+    <CheckBox
+        android:id="@+id/normalUserCheckBox"
+        android:layout_width="92dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="24dp"
+        android:text="Topluluk Üyesi"
+        app:layout_constraintEnd_toStartOf="@+id/adminCheckBox"
+        app:layout_constraintHorizontal_bias="0.855"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordText" />
+
     <Button
 
         android:id="@+id/GirisYap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="76dp"
         android:background="@drawable/buttonarkaplan"
         android:onClick="girisYapclick"
         android:text="Giriş Yap"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/passwordText"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="@+id/passwordText"
         app:layout_constraintTop_toBottomOf="@+id/passwordText"
         tools:ignore="MissingConstraints" />
